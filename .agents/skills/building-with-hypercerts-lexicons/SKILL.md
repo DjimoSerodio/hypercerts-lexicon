@@ -565,6 +565,14 @@ const evmLink = {
 
 ### Creating an Attachment
 
+Optional `capturedAt` records capture time separately from `createdAt`. Use
+`org.hypercerts.defs#instant` for a known UTC offset, `#localDateTime` for an
+unknown offset, or `#calendarDate` for date-only knowledge; each contains
+`value`. Never infer UTC or the viewer timezone. Omit the field for unknown
+capture time or multi-capture material without one truthful shared value.
+It does not represent a coverage interval. Local/date-only calendar validation
+is a client responsibility. See [capture-time design and examples](../../../docs/design/attachment-capture-time.md).
+
 ```typescript
 import { CONTEXT_ATTACHMENT_NSID } from "@hypercerts-org/lexicon";
 

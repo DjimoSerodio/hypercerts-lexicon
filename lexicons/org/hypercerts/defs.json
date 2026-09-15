@@ -100,6 +100,44 @@
           "description": "Image (up to 10MB)"
         }
       }
+    },
+    "instant": {
+      "type": "object",
+      "description": "A timestamp identifying an instant with a known UTC offset. Do not use an unknown offset (-00:00) or infer an offset from the viewer timezone.",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "datetime",
+          "description": "ATProto datetime with a known UTC offset, for example 2019-07-14T13:22:05+12:00."
+        }
+      }
+    },
+    "localDateTime": {
+      "type": "object",
+      "description": "A Gregorian local date and time whose UTC offset is unknown. This value does not identify an instant.",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 19,
+          "maxLength": 29,
+          "description": "Valid Gregorian YYYY-MM-DDTHH:mm:ss, optionally followed by a decimal point and 1 to 9 fractional-second digits. No UTC offset or Z suffix. Clients must validate calendar and clock values; Lexicon enforces only string length."
+        }
+      }
+    },
+    "calendarDate": {
+      "type": "object",
+      "description": "A Gregorian calendar date with no known time of day or UTC offset. This value does not identify an instant.",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Valid Gregorian date in YYYY-MM-DD form. Do not interpret as midnight UTC. Clients must validate calendar values; Lexicon enforces only string length."
+        }
+      }
     }
   }
 }
