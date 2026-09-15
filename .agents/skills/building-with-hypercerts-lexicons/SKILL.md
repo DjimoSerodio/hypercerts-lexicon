@@ -565,6 +565,11 @@ const evmLink = {
 
 ### Creating an Attachment
 
+Attachments may include up to 20 `tags` strong references to
+`org.hypercerts.vocab.tag` records. All tags apply simultaneously (logical
+AND), without ordering, weighting, negation, or inheritance. Tags classify
+the attachment; they do not establish verification or evidence quality.
+
 ```typescript
 import { CONTEXT_ATTACHMENT_NSID } from "@hypercerts-org/lexicon";
 
