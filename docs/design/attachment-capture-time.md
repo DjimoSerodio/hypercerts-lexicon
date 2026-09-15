@@ -1,8 +1,13 @@
-# Attachment capture time (draft)
+# Attachment capture time proposal
 
 A photo captured in 2019 and uploaded in 2026 needs both dates. `createdAt`
 continues to mean record creation; optional `capturedAt` describes capture.
 It is client-declared metadata, not proof of the device clock's accuracy.
+
+Our proposal is `capturedAt` with three shared object variants: `instant`,
+`localDateTime`, and `calendarDate`. We recommend this structure because it
+makes the available time information explicit to publishers and readers.
+The PR remains a draft for maintainer review of this concrete proposal.
 
 ## Why explicit variants?
 
@@ -91,15 +96,28 @@ ordering must not be presented as a proven chronological ordering of
 instants. Unknown future union variants should be handled without guessing
 their meaning.
 
-## Decisions requested from maintainers
+## Design decision and alternatives considered
 
-1. Prefer `capturedAt` and the three object variants, or one string accepting
-   timestamp, local date-time, and date-only forms? A carefully validated
-   string is viable and simpler on the wire, but its generated type does
-   not distinguish the cases. It also needs application validation.
-2. Are `instant`, `localDateTime`, and `calendarDate` suitable shared names?
-3. Is the narrow single-time scope useful as proposed, leaving coverage
-   intervals to a separately designed field/profile?
+We propose `capturedAt` as an optional union of `instant`, `localDateTime`,
+and `calendarDate`, using the definitions and narrow capture-time scope
+shown above. Coverage intervals require separate semantics and are outside
+this proposal.
+
+We considered a single string accepting timestamp, local date-time, and
+date-only forms. We chose explicit variants because generated types then
+identify the case directly, rather than requiring every reader to infer it
+from string syntax. Both approaches still require appropriate validation;
+the union does not claim to eliminate that work.
+
+The small publisher-adapter cost is selecting the variant matching the
+available metadata, or omitting the field when capture time is unknown.
+Existing publishers can continue unchanged because the field is optional.
+Shared parsing and validation helpers can reduce adoption work, but are
+not included in this schema contribution.
+
+We welcome maintainer feedback, including a better design that preserves
+these distinctions with less complexity. The three-variant structure is
+our proposed solution.
 
 No new attachment category, observation lexicon, or verification semantics
 are introduced here. Tags are an independent proposal.
