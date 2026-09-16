@@ -76,6 +76,15 @@
             "ref": "com.atproto.repo.strongRef",
             "description": "A strong reference to the location where this attachment's subject matter occurred. The record referenced must conform with the lexicon app.certified.location."
           },
+          "capturedAt": {
+            "type": "union",
+            "refs": [
+              "org.hypercerts.defs#instant",
+              "org.hypercerts.defs#localDateTime",
+              "org.hypercerts.defs#calendarDate"
+            ],
+            "description": "When the attached material was captured, at the known precision; distinct from record creation or processing time. Optional: omit when unknown or when multiple captures cannot truthfully share one value. This field does not describe a coverage interval and does not restrict general attachments to a single capture."
+          },
           "createdAt": {
             "type": "string",
             "format": "datetime",
@@ -85,15 +94,6 @@
             "type": "ref",
             "ref": "app.certified.signature.defs#list",
             "description": "Optional cryptographic signatures attesting to this record's content."
-          },
-          "capturedAt": {
-            "type": "union",
-            "refs": [
-              "org.hypercerts.defs#instant",
-              "org.hypercerts.defs#localDateTime",
-              "org.hypercerts.defs#calendarDate"
-            ],
-            "description": "When the attached material was captured, at the known precision; distinct from record creation or processing time. Optional: omit when unknown or when multiple captures cannot truthfully share one value. This field does not describe a coverage interval and does not restrict general attachments to a single capture."
           }
         }
       }
