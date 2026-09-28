@@ -595,7 +595,7 @@ A labeled URL reference.
 
 ### `app.certified.graph.entityFollow`
 
-**Description:** Record declaring a social 'follow' relationship with a non-account entity, such as a specific record. Account (DID) follows are out of scope and belong to app.certified.graph.follow. The subject is an open union so additional non-DID entity kinds can be added in the future. Duplicate follows will be ignored by the AppView.
+**Description:** Record declaring a social 'follow' relationship with a non-account entity, such as a specific record. Account (DID) follows are out of scope and belong to app.certified.graph.follow. The subject is an open union so additional non-DID entity kinds can be added in the future.
 
 **Key:** `tid`
 
@@ -612,7 +612,7 @@ A labeled URL reference.
 
 ### `app.certified.graph.follow`
 
-**Description:** Record declaring a social 'follow' relationship of another account. Duplicate follows will be ignored by the AppView.
+**Description:** Record declaring a social 'follow' relationship of another account.
 
 **Key:** `tid`
 

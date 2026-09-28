@@ -231,12 +231,12 @@ dataclass repost {
     !endif
 }
 
-' Liked and reposted subjects are referenced generically by strongRef
-' (AT-URI + CID), mirroring app.bsky.feed.like / app.bsky.feed.repost,
-' so the like or repost points at the version the author saw.
-entity "record (any lexicon, by strongRef)" as feedSubject #FFD4A3 {
+' com.atproto.repo.strongRef
+' Liked and reposted records are pinned to the version the author saw.
+dataclass strongRef {
     !if (SHOW_FIELDS == "true")
-    AT-URI + CID
+    uri
+    cid
     !endif
 }
 
@@ -513,8 +513,8 @@ entityFollow::subject --> entityFollowSubject : follows
 
 ' app.certified.feed.like / repost point at any record by strongRef; the
 ' optional via points at the repost through which the subject was found
-like::subject --> feedSubject : likes
-repost::subject --> feedSubject : reposts
+like::subject --> strongRef : likes
+repost::subject --> strongRef : reposts
 like::via --> repost : via
 repost::via --> repost : via
 ' This screws up the layout
