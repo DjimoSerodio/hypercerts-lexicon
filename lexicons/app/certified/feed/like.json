@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "Record declaring a 'like' of a piece of subject content. Social feedback only: a like carries no protocol meaning about the subject (it is not an evaluation, endorsement, or acknowledgement). Schema-compatible with app.bsky.feed.like. Duplicate likes of the same subject will be ignored by the AppView.",
+      "description": "Record declaring a 'like' of a piece of subject content. Social feedback only: a like carries no protocol meaning about the subject (it is not an evaluation, endorsement, or acknowledgement). Schema-compatible with app.bsky.feed.like.",
       "key": "tid",
       "record": {
         "type": "object",

@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "Record representing a 'repost' of an existing record, surfacing it to the reposter's followers. The subject is pinned by CID, so the repost refers to the version the reposter saw, not to later edits. Schema-compatible with app.bsky.feed.repost. Duplicate reposts of the same subject will be ignored by the AppView.",
+      "description": "Record representing a 'repost' of an existing record, surfacing it to the reposter's followers. The subject is pinned by CID, so the repost refers to the version the reposter saw, not to later edits. Schema-compatible with app.bsky.feed.repost.",
       "key": "tid",
       "record": {
         "type": "object",

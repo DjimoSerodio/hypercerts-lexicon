@@ -561,7 +561,7 @@ A labeled URL reference.
 
 ### `app.certified.feed.like`
 
-**Description:** Record declaring a 'like' of a piece of subject content. Social feedback only: a like carries no protocol meaning about the subject (it is not an evaluation, endorsement, or acknowledgement). Schema-compatible with app.bsky.feed.like. Duplicate likes of the same subject will be ignored by the AppView.
+**Description:** Record declaring a 'like' of a piece of subject content. Social feedback only: a like carries no protocol meaning about the subject (it is not an evaluation, endorsement, or acknowledgement). Schema-compatible with app.bsky.feed.like.
 
 **Key:** `tid`
 
@@ -578,7 +578,7 @@ A labeled URL reference.
 
 ### `app.certified.feed.repost`
 
-**Description:** Record representing a 'repost' of an existing record, surfacing it to the reposter's followers. The subject is pinned by CID, so the repost refers to the version the reposter saw, not to later edits. Schema-compatible with app.bsky.feed.repost. Duplicate reposts of the same subject will be ignored by the AppView.
+**Description:** Record representing a 'repost' of an existing record, surfacing it to the reposter's followers. The subject is pinned by CID, so the repost refers to the version the reposter saw, not to later edits. Schema-compatible with app.bsky.feed.repost.
 
 **Key:** `tid`
 
