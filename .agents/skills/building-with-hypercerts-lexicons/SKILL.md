@@ -296,6 +296,8 @@ description (e.g. "Manage your Hypercerts data"). Notes:
 | **EVM Link**         | `app.certified.link.evm`           | Verifiable ATProto DID to EVM wallet link via EIP-712 signature. Can additionally carry `signatures[]` for record provenance                                                                                  |
 | **Follow**           | `app.certified.graph.follow`       | Social-graph follow: declares the author follows another account by DID. Schema-compatible with `app.bsky.graph.follow`                                                                                       |
 | **Entity Follow**    | `app.certified.graph.entityFollow` | Social-graph follow for non-account entities (e.g. a record, by AT-URI without a CID). Account (DID) follows stay in `app.certified.graph.follow`; `subject` is an open union for future non-DID entity kinds |
+| **Like**             | `app.certified.feed.like`          | Social feedback on any record (by strongRef); optional `via` credits the repost it was found through. Schema-compatible with `app.bsky.feed.like`                                                             |
+| **Repost**           | `app.certified.feed.repost`        | Resurfaces any record (by strongRef) to the reposter's followers; optional `via` traces repost chains. Schema-compatible with `app.bsky.feed.repost`                                                          |
 
 ### Signatures — cryptographic attestation
 
@@ -352,6 +354,8 @@ CERTIFIED
   badge/response ──> badge/award ──> badge/definition
   graph/follow ───────────> account DID (social follow)
   graph/entityFollow ─────> record (by AT-URI) (non-account follow)
+  feed/like ──────────────> record (by strongRef) (social like)
+  feed/repost ────────────> record (by strongRef) (social repost)
   signature/defs           (shared #list and #inline defs)
   signature/proof          (remote attestation proof record)
 
@@ -538,6 +542,44 @@ only subject variant today is `app.certified.defs#recordSubject`, a
 record referenced by AT-URI (DID form, no CID) so the follow survives
 later updates to the record; `subject` is an open union so future
 non-DID entity kinds can be added non-breakingly.
+
+### Liking and Reposting a Record
+
+```typescript
+import { FEED_LIKE_NSID, FEED_REPOST_NSID } from "@hypercerts-org/lexicon";
+
+const repost = {
+  $type: FEED_REPOST_NSID,
+  // strongRef to any record; the CID pins the version being reposted
+  subject: {
+    uri: "at://did:plc:alice/org.hypercerts.claim.activity/3k2abc",
+    cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  },
+  createdAt: new Date().toISOString(),
+};
+
+const like = {
+  $type: FEED_LIKE_NSID,
+  subject: {
+    uri: "at://did:plc:alice/org.hypercerts.claim.activity/3k2abc",
+    cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  },
+  createdAt: new Date().toISOString(),
+  // Optional `via` strongRef — the repost through which the subject was
+  // encountered. Omit for likes made directly on the subject.
+  // via: {
+  //   uri: "at://did:plc:bob/app.certified.feed.repost/3k2def",
+  //   cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  // },
+};
+```
+
+`app.certified.feed.like` and `app.certified.feed.repost` mirror
+`app.bsky.feed.like` and `app.bsky.feed.repost` (same key strategy and
+fields including the optional `via` strongRef). A like is social
+feedback only — not an evaluation or acknowledgement. Count likes and
+reposts by `subject.uri`, not by the full strongRef, so edits to the
+subject do not split the count.
 
 ### Linking an EVM Wallet
 
