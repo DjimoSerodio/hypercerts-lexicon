@@ -607,6 +607,11 @@ const evmLink = {
 
 ### Creating an Attachment
 
+Attachments may include up to 20 `tags` strong references to
+`org.hypercerts.vocab.tag` records. All tags apply simultaneously (logical
+AND), without ordering, weighting, negation, or inheritance. Tags classify
+the attachment; they do not establish verification or evidence quality.
+
 Optional `capturedAt` records when the attached material was captured (for
 example, when a photo was taken), separately from `createdAt`, the record's
 creation time. It is a standard atproto `datetime`, so it must include timezone

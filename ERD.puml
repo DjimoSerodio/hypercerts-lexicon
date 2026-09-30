@@ -92,6 +92,7 @@ dataclass attachment {
     shortDescription?
     description?
     location?
+    tags[]?
     capturedAt?
     createdAt
     !endif
@@ -441,6 +442,7 @@ hiddenLocation1 -[hidden]-> activity
 
 attachment::subjects --> activity
 attachment::location --> location
+attachment::tags --> tag
 
 measurement::subjects --> activity
 
