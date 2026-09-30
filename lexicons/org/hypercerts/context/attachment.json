@@ -77,13 +77,9 @@
             "description": "A strong reference to the location where this attachment's subject matter occurred. The record referenced must conform with the lexicon app.certified.location."
           },
           "capturedAt": {
-            "type": "union",
-            "refs": [
-              "org.hypercerts.defs#instant",
-              "org.hypercerts.defs#localDateTime",
-              "org.hypercerts.defs#calendarDate"
-            ],
-            "description": "When the attached material was captured, at the known precision; distinct from record creation or processing time. Optional: omit when unknown or when multiple captures cannot truthfully share one value. This field does not describe a coverage interval and does not restrict general attachments to a single capture."
+            "type": "string",
+            "format": "datetime",
+            "description": "Client-declared time when the attached material was captured (e.g. when a photo was taken), as distinct from createdAt. Omit if capture time is unknown, if only a local time without timezone offset or only a date is known, or if no single capture time applies. Not a coverage interval."
           },
           "createdAt": {
             "type": "string",
