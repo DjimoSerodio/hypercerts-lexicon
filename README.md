@@ -58,6 +58,8 @@ CERTIFIED ─ shared lexicons (certified.app)
   badge/response ──► badge/award ──► badge/definition
   graph/follow ────────────► account DID  (social follow)
   graph/entityFollow ──────► record (by AT-URI)  (non-account follow)
+  feed/like ───────────────► record (by strongRef)  (social like)
+  feed/repost ─────────────► record (by strongRef)  (social repost)
   signature/defs            (shared #list and #inline defs)
   signature/proof           (remote attestation proof record)
 ```
@@ -304,6 +306,8 @@ await agent.api.com.atproto.repo.createRecord({
 | **EVM Link**         | `app.certified.link.evm`           | Verifiable ATProto DID ↔ EVM wallet link via EIP-712 signature. Extensible for future proof methods (e.g. ERC-1271, ERC-6492).                                                                                                                                                                    |
 | **Follow**           | `app.certified.graph.follow`       | Social-graph follow relationship — declares that the author follows another account by DID. Schema-compatible with `app.bsky.graph.follow`.                                                                                                                                                        |
 | **Entity Follow**    | `app.certified.graph.entityFollow` | Social-graph follow relationship for non-account entities (e.g. a record, referenced by AT-URI without a CID so the follow survives updates). Account (DID) follows remain in `app.certified.graph.follow`; `subject` is an open union so future non-DID entity kinds can be added non-breakingly. |
+| **Like**             | `app.certified.feed.like`          | Social feedback on any record, referenced by strongRef. Optional `via` credits the repost it was found through. Schema-compatible with `app.bsky.feed.like`.                                                                                                                                       |
+| **Repost**           | `app.certified.feed.repost`        | Resurfaces any record (by strongRef, pinned to the version seen) to the reposter's followers. Optional `via` traces repost chains. Schema-compatible with `app.bsky.feed.repost`.                                                                                                                  |
 
 ### Signatures (`app.certified.signature.*`)
 
@@ -869,6 +873,55 @@ const entityFollow = {
   // },
 };
 ```
+
+### Liking and reposting records
+
+`app.certified.feed.like` and `app.certified.feed.repost` are the feed
+primitives for `certified.app`. Their shapes are identical to
+`app.bsky.feed.like` and `app.bsky.feed.repost` (same `key: tid`, same
+`subject` / `createdAt` / optional `via` fields), so feed-builders and
+view services can index them with the same logic they already use for
+Bluesky likes and reposts. A like is social feedback only — it carries
+no protocol meaning about the subject and is not an evaluation or
+acknowledgement.
+
+`subject` is a `com.atproto.repo.strongRef` to a record of any lexicon.
+The CID pins the version the author saw; indexers that count likes or
+reposts should group by `subject.uri`.
+
+```typescript
+import { FEED_LIKE_NSID, FEED_REPOST_NSID } from "@hypercerts-org/lexicon";
+
+const repost = {
+  $type: FEED_REPOST_NSID,
+  subject: {
+    uri: "at://did:plc:alice/org.hypercerts.claim.activity/3k2abc",
+    cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  },
+  createdAt: new Date().toISOString(),
+};
+
+const like = {
+  $type: FEED_LIKE_NSID,
+  subject: {
+    uri: "at://did:plc:alice/org.hypercerts.claim.activity/3k2abc",
+    cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  },
+  createdAt: new Date().toISOString(),
+  // Optional `via` strongRef — set when the subject was encountered through
+  // someone else's repost, so the AppView can credit the reposter. Omit for
+  // likes made directly on the subject.
+  // via: {
+  //   uri: "at://did:plc:bob/app.certified.feed.repost/3k2def",
+  //   cid: "bafyreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy",
+  // },
+};
+```
+
+The optional `via` field on both records is a strongRef to the record
+through which the subject was encountered — typically an
+`app.certified.feed.repost` — mirroring the equivalent field on
+`app.bsky.feed.like` and `app.bsky.feed.repost`.
 
 ### Linking ATProto Identity to EVM Wallets
 

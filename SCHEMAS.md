@@ -550,19 +550,53 @@ A labeled URL reference.
 
 **Title:** Manage your Certified data
 
-**Detail:** Create, edit, and delete your Certified records (profile, badges, follows, wallet links, and related data).
+**Detail:** Create, edit, and delete your Certified records (profile, badges, follows, likes, reposts, wallet links, and related data).
 
 **Resource:** `repo`
 
-**Collections:** `app.certified.actor.organization`, `app.certified.actor.profile`, `app.certified.badge.award`, `app.certified.badge.definition`, `app.certified.badge.response`, `app.certified.graph.entityFollow`, `app.certified.graph.follow`, `app.certified.link.evm`, `app.certified.location`, `app.certified.signature.proof`
+**Collections:** `app.certified.actor.organization`, `app.certified.actor.profile`, `app.certified.badge.award`, `app.certified.badge.definition`, `app.certified.badge.response`, `app.certified.feed.like`, `app.certified.feed.repost`, `app.certified.graph.entityFollow`, `app.certified.graph.follow`, `app.certified.link.evm`, `app.certified.location`, `app.certified.signature.proof`
 
 **Actions:** `create`, `update`, `delete`
 
 ---
 
+### `app.certified.feed.like`
+
+**Description:** Record declaring a 'like' of a piece of subject content. Social feedback only: a like carries no protocol meaning about the subject (it is not an evaluation, endorsement, or acknowledgement). Schema-compatible with app.bsky.feed.like.
+
+**Key:** `tid`
+
+#### Properties
+
+| Property     | Type     | Required | Description                                                                                                                                                                                                                                                                                        |
+| ------------ | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `subject`    | `ref`    | ✅       | Strong reference to the record being liked. May be a record of any lexicon (e.g. an activity, a collection, or a repost's subject).                                                                                                                                                                |
+| `createdAt`  | `string` | ✅       | Client-declared timestamp when this record was originally created.                                                                                                                                                                                                                                 |
+| `via`        | `ref`    | ❌       | Optional strong reference to the record through which the subject was encountered, typically an app.certified.feed.repost. Lets AppViews credit the account that surfaced the subject. Mirrors the optional `via` field on app.bsky.feed.like; the referenced record may conform with any lexicon. |
+| `signatures` | `ref`    | ❌       | Optional cryptographic signatures attesting to this record's content.                                                                                                                                                                                                                              |
+
+---
+
+### `app.certified.feed.repost`
+
+**Description:** Record representing a 'repost' of an existing record, surfacing it to the reposter's followers. The subject is pinned by CID, so the repost refers to the version the reposter saw, not to later edits. Schema-compatible with app.bsky.feed.repost.
+
+**Key:** `tid`
+
+#### Properties
+
+| Property     | Type     | Required | Description                                                                                                                                                                                                                                                                                                                       |
+| ------------ | -------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `subject`    | `ref`    | ✅       | Strong reference to the record being reposted. May be a record of any lexicon (e.g. an activity or a collection).                                                                                                                                                                                                                 |
+| `createdAt`  | `string` | ✅       | Client-declared timestamp when this record was originally created.                                                                                                                                                                                                                                                                |
+| `via`        | `ref`    | ❌       | Optional strong reference to the record through which the subject was encountered, typically another app.certified.feed.repost. Lets AppViews trace repost chains and credit the account that surfaced the subject. Mirrors the optional `via` field on app.bsky.feed.repost; the referenced record may conform with any lexicon. |
+| `signatures` | `ref`    | ❌       | Optional cryptographic signatures attesting to this record's content.                                                                                                                                                                                                                                                             |
+
+---
+
 ### `app.certified.graph.entityFollow`
 
-**Description:** Record declaring a social 'follow' relationship with a non-account entity, such as a specific record. Account (DID) follows are out of scope and belong to app.certified.graph.follow. The subject is an open union so additional non-DID entity kinds can be added in the future. Duplicate follows will be ignored by the AppView.
+**Description:** Record declaring a social 'follow' relationship with a non-account entity, such as a specific record. Account (DID) follows are out of scope and belong to app.certified.graph.follow. The subject is an open union so additional non-DID entity kinds can be added in the future.
 
 **Key:** `tid`
 
@@ -579,7 +613,7 @@ A labeled URL reference.
 
 ### `app.certified.graph.follow`
 
-**Description:** Record declaring a social 'follow' relationship of another account. Duplicate follows will be ignored by the AppView.
+**Description:** Record declaring a social 'follow' relationship of another account.
 
 **Key:** `tid`
 
