@@ -1,5 +1,13 @@
 # @hypercerts-org/lexicon
 
+## 1.4.1
+
+### Patch Changes
+
+- [#256](https://github.com/hypercerts-org/hypercerts-lexicon/pull/256) [`17b9c92`](https://github.com/hypercerts-org/hypercerts-lexicon/commit/17b9c920c9559332d4146d7589612b316416d8b5) Thanks [@holkexyz](https://github.com/holkexyz)! - Add `app.certified.feed.like` and `app.certified.feed.repost` record types for social feedback in feeds, schema-compatible with `app.bsky.feed.like` and `app.bsky.feed.repost` (strongRef `subject`, optional `via`), and add both to the `app.certified.authWrite` permission set
+
+  Remove the "duplicate follows will be ignored by the AppView" sentence from the `app.certified.graph.follow` and `app.certified.graph.entityFollow` descriptions: deduplication is indexer behavior, not something the lexicon defines. No schema change.
+
 ## 1.4.0
 
 This release adds first-class records for non-agent subjects, together with shared tags for describing features and collections.

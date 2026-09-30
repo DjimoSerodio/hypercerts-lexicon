@@ -214,6 +214,33 @@ dataclass entityFollow {
     !endif
 }
 
+' app.certified.feed.like
+dataclass like {
+    !if (SHOW_FIELDS == "true")
+    subject
+    via?
+    createdAt
+    !endif
+}
+
+' app.certified.feed.repost
+dataclass repost {
+    !if (SHOW_FIELDS == "true")
+    subject
+    via?
+    createdAt
+    !endif
+}
+
+' com.atproto.repo.strongRef
+' Liked and reposted records are pinned to the version the author saw.
+dataclass strongRef {
+    !if (SHOW_FIELDS == "true")
+    uri
+    cid
+    !endif
+}
+
 ' Followed subjects that are records are referenced generically by
 ' AT-URI (DID form, no CID) rather than modelled as a specific lexicon,
 ' so the follow survives updates to the referenced record.
@@ -485,6 +512,13 @@ follow::subject --> contributorEntity : follows
 ' app.certified.graph.entityFollow points at a non-account record (open
 ' union; account DIDs are out of scope here, see app.certified.graph.follow)
 entityFollow::subject --> entityFollowSubject : follows
+
+' app.certified.feed.like / repost point at any record by strongRef; the
+' optional via points at the repost through which the subject was found
+like::subject --> strongRef : likes
+repost::subject --> strongRef : reposts
+like::via --> repost : via
+repost::via --> repost : via
 ' This screws up the layout
 'badgeAward::subject --[norank]-> collection
 
